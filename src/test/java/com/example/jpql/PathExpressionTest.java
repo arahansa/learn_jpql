@@ -5,7 +5,11 @@ import com.example.repository.OrderRepository;
 import com.example.service.jpql.PathExpressionService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import static org.junit.Assert.*;
@@ -13,6 +17,7 @@ import static org.junit.Assert.*;
 /**
  * Created by jarvis on 15. 12. 30..
  */
+@Transactional
 public class PathExpressionTest  extends TestJPQLConfig{
 
     @Autowired
@@ -20,15 +25,17 @@ public class PathExpressionTest  extends TestJPQLConfig{
     @Autowired
     OrderRepository orderRepository;
 
+
     @Test
     public void pathExpressionTest() throws Exception{
+        // save
         Team team1 = new Team("팀A");
         Team team2 = new Team("팀B");
 
         final Member member1 = new Member("아라한사", team1, 30);
         final Member member2 = new Member("임형주", team1, 20);
-        final Member member3 = new Member("수지", team2);
-        final Member member4 = new Member("강백호", team2);
+        final Member member3 = new Member("수지", team2, 10);
+        final Member member4 = new Member("강백호", team2, 40);
 
         Product product = new Product("productA");
         Product product2 = new Product("productB");
@@ -45,13 +52,20 @@ public class PathExpressionTest  extends TestJPQLConfig{
 
         List<Order> orders = Arrays.asList(order, order2, order3, order4);
         orderRepository.save(orders);
-
         assertEquals(4L, orderRepository.count());
 
+        // load
         System.out.println("경로 표현식 조회 ");
         final List<Team> teamFromPathExpression = pathExpressionService.getTeamFromPathExpression();
         System.out.println(" team : " + teamFromPathExpression);
         assertEquals(2, teamFromPathExpression.size());
+
+        // object graph test
+        final Team getTeam = teamFromPathExpression.get(0);
+        assertEquals("팀A", getTeam.getName());
+
+        assertEquals("아라한사", getTeam.getMembers().get(0).getUsername());
+        System.out.println(getTeam.getMembers().get(0));
     }
 
 }

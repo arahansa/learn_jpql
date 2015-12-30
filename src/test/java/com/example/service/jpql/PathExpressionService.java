@@ -21,7 +21,7 @@ public class PathExpressionService {
     EntityManager em;
 
     public List<Team> getTeamFromPathExpression(){
-        String jpql = "select o.member.team from Order o where o.product.name = 'productA' and o.address.city = 'JINJU'";
+        String jpql = "select o.member.team from Order o where o.product.name = 'productA' and o.address.city = 'JINJU' order by o.member.age desc";
         final TypedQuery<Team> typedQuery = em.createQuery(jpql, Team.class);
         return typedQuery.getResultList();
     }
