@@ -50,6 +50,18 @@ public class Member {
 		super();
 		this.age = age;
 	}
+	public Member(String username, Team team){
+		super();
+		this.username = username;
+		setTeam(team);
+	}
+	public Member(String username, Team team, int age){
+		super();
+		this.username = username;
+		this.age = age;
+		setTeam(team);
+	}
+
 	public Member(String username, int age) {
 		super();
 		this.username = username;

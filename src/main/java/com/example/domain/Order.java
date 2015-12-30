@@ -34,7 +34,16 @@ public class Order {
 	
 	@Embedded
 	private Address address;
-	
+
+	public Order() {
+	}
+
+	public Order(Member member, Product product, Address address) {
+		setMember(member);
+		setProduct(product);
+		setAddress(address);
+	}
+
 	public void setMember(Member member){
 		//기존 관계 제거
 		if(this.member!=null){

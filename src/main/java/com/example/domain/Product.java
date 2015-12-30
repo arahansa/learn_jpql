@@ -32,5 +32,11 @@ public class Product {
 
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="product")
 	private List<Order> orders = new ArrayList<>();
-	
+
+	public Product() {
+	}
+
+	public Product(String name) {
+		this.name = name;
+	}
 }
