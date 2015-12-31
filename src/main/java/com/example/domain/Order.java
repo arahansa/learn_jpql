@@ -18,8 +18,7 @@ import lombok.EqualsAndHashCode;
 @Table(name="ORDERS")
 @EqualsAndHashCode(of="id")
 public class Order {
-	
-	
+
 	@Id
 	@GeneratedValue
 	private Long id;
