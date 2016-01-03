@@ -32,7 +32,7 @@ public class NamedQueryTest extends TestJPQLConfig  {
     @Test
     public void namedQueryTest() throws Exception{
         final List<Member> members = namedQueryService.getMembersByUserName("아라한사");
-        assertEquals(30,members.get(0).getAge());
+        assertEquals(30, members.get(0).getAge());
         assertEquals(4L, namedQueryService.getMemberCount());
     }
 }
