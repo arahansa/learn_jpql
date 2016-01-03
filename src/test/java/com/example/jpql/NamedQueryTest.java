@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  * Created by arahansa on 2016-01-03.
  */
 @Transactional
-public class NamedQueryTest extends  TestJPQLConfig  {
+public class NamedQueryTest extends TestJPQLConfig  {
 
     @Autowired
     NamedQueryService namedQueryService;
@@ -28,8 +28,6 @@ public class NamedQueryTest extends  TestJPQLConfig  {
         final List<Member> members = Arrays.asList(member1, member2, member3, member4);
         memberRepository.save(members);
     }
-
-
 
     @Test
     public void namedQueryTest() throws Exception{
