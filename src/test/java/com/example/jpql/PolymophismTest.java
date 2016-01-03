@@ -45,5 +45,10 @@ public class PolymophismTest   extends TestJPQLConfig  {
         // type
         carList = polyService.getCars("select c from Car c where type(c) IN (ArmyCar, SportsCar)");
         carList.forEach(n->assertTrue(n instanceof ArmyCar || n instanceof SportsCar));
+
+        // treat
+        carList = polyService.getCars("select c from Car c where treat ( c as ArmyCar ).loadage = 100");
+        ArmyCar getArmyCar = (ArmyCar) carList.get(0);
+        assertEquals(100, getArmyCar.getLoadage() );
     }
 }

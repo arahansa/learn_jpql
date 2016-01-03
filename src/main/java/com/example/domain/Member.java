@@ -3,13 +3,7 @@ package com.example.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,6 +13,16 @@ import lombok.ToString;
 @Entity(name="Member")
 @EqualsAndHashCode(of="id")
 @ToString(exclude={"orders"})
+@NamedQueries({
+		@NamedQuery(
+				name = "Member.findByUsername",
+				query = "select m from Member m where m.username= :username"
+		),
+		@NamedQuery(
+				name = "Member.count",
+				query = "select count(m) from Member m "
+		)
+})
 public class Member {
 	
 	@Id
