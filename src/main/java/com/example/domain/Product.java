@@ -39,4 +39,13 @@ public class Product {
 	public Product(String name) {
 		this.name = name;
 	}
+	public Product(String name, int price){
+		this.name = name;
+		this.price = price;
+	}
+	public Product(String name, int price, int stockAmount){
+		this.name = name;
+		this.price = price;
+		this.stockAmount = stockAmount;
+	}
 }

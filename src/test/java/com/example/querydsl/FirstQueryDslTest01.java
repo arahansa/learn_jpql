@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by arahansa on 2016-01-03.
  */
-public class FirstQueryDslTest extends TestJPQLConfig{
+public class FirstQueryDslTest01 extends TestJPQLConfig{
 
     @PersistenceContext
     EntityManager em;
