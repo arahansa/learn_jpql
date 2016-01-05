@@ -1,26 +1,66 @@
 package com.example.querydsl;
 
 import com.example.domain.*;
+import com.example.domain.dto.ProductDTO;
 import com.example.jpql.TestJPQLConfig;
 import com.example.repository.OrderRepository;
-import com.mysema.query.jpa.JPASubQuery;
+import com.mysema.query.Tuple;
 import com.mysema.query.jpa.impl.JPAQuery;
+import com.mysema.query.jpa.impl.JPAUpdateClause;
+import com.mysema.query.types.Projections;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.sound.midi.Soundbank;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by arahansa on 2016-01-05.
  */
-public class JoinTest03 extends TestJPQLConfig {
+public class ProjectionResultReturn04 extends TestJPQLConfig {
+
+    @Test
+    public void 프로젝션테스트() throws Exception{
+        QMember member = QMember.member;
+        List<String> result = query.from(member).list(member.username);
+        System.out.println("===  멤버들 이름 프로젝션 === ");
+        result.forEach(n-> System.out.println(n));
+    }
+    
+    @Test
+    public void 튜플테스트() throws Exception{
+        final List<Tuple> result = query.from(product).list(product.name, product.price);
+        System.out.println("=== 상품 정보 === ");
+        result.forEach(n->{
+            System.out.println("상품 이름 :"+ n.get(product.name));
+            System.out.println("상품 가격 : "+n.get(product.price));
+        });
+    }
+    
+    @Test
+    public void 빈생성() throws Exception{
+        final List<ProductDTO> products = query.from(product).list(Projections.bean(ProductDTO.class, product.name.as("username"), product.price));
+        System.out.println(" === 프로덕트 DTO 생성된 것들 ===");
+        products.forEach(n-> System.out.println(n));
+    }
+    
+    @Test
+    public void 수정배치쿼리() throws Exception{
+        JPAUpdateClause updateClause = new JPAUpdateClause(em, product);
+        long count = updateClause.where(product.name.like("product%")).set(product.price, product.price.add(1000)).execute();
+        System.out.println(" 수정된 갯수 : "+count);
+        
+        final List<Product> products = query.from(product).list(product);
+        products.forEach(n-> System.out.println(n));
+
+    }
+
 
     @Autowired
     OrderRepository orderRepository;
@@ -62,36 +102,4 @@ public class JoinTest03 extends TestJPQLConfig {
         orderRepository.save(orders);
         assertEquals(4L, orderRepository.count());
     }
-
-    @Test
-    public void joinTest() throws Exception{
-        System.out.println("상품 주문한 것들 :: ");
-        List<Order> list = query.from(order).join(order.member, member).leftJoin(order.product, product).list(order);
-        list.forEach(n-> System.out.println(n));
-    }
-    
-    @Test
-    public void onStatement() throws Exception{
-        System.out.println(" On 구문 : product의 stockAmount 가 4이상인 것 이상뽑기 ");
-        final List<Order> list = query.from(order)
-                .leftJoin(order.product, product) // fetch() 가능
-                .on(product.stockAmount.gt(4)).list(order);
-        list.forEach(n-> {
-            System.out.println(n);
-            assertTrue(list.get(0).getProduct().getStockAmount() > 4);
-        });
-    }
-    
-    @Test
-    public void subQuery() throws Exception{
-        QMember member = QMember.member;
-        QMember memberSub = new QMember("qMemberSub");
-
-        System.out.println("평균보다 나이가 많은 멤버들 :: ");
-        final List<Member> members = query.from(member).where(member.age.gt(
-                new JPASubQuery().from(memberSub).unique(memberSub.age.avg())
-        )).list(member);
-        members.forEach(n-> System.out.println(n));
-    }
-
 }
